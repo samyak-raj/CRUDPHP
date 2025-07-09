@@ -88,20 +88,20 @@ $Hobby = explode(',', $row['Hobby']);
        <br><br> 
 
        Hobbies:
-       <input type="checkbox" name="Hobby[]" id="" value="Coding">Coding
-       <input type="checkbox" name="Hobby[]" id="" value="Guitar">Guitar 
-       <input type="checkbox" name="Hobby[]" id="" value="Dance">Dance
+       <input type="checkbox" name="Hobby[]" id="" value="Coding" <?php echo in_array('Coding', $Hobby) ? 'checked' : '' ?>>Coding
+       <input type="checkbox" name="Hobby[]" id="" value="Guitar" <?php echo in_array('Guitar', $Hobby) ? 'checked' : '' ?>>Guitar 
+       <input type="checkbox" name="Hobby[]" id="" value="Dance" <?php echo in_array('Dance', $Hobby) ? 'checked' : '' ?>>Dance
        <br><br>
 
        Image:
-       <input type="file" name="Image" id="" accept="Image/*">
+       <input type="file" name="Image" id="" accept="Image/*" value="<?php echo $row['Picture']?>">
         <br><br>
         <img src="<?php echo $row['Picture']?>" alt="">
 
        <br><br>
 
        CV:
-       <input type="file" name="Cv" id="">
+       <input type="file" name="Cv" id="" value="<?php echo $row['Cv']?>">
        <br><br>
         <a href="<?php echo $row['Cv']?>">View CV<a>
         <br><br>
@@ -122,23 +122,44 @@ include 'dbconnect.php';
         $Hobby = implode(',', $_POST['Hobby']);
         $Age = $_POST['Age'];
 
-        $pic = $_FILES['Image']['name'];
-        $temp1 = $_FILES['Image']['tmp_name'];
-        $folder1 = 'Pic/' . $pic;
-        move_uploaded_file($temp1, $folder1);
-        
-        $pic = $_FILES['Cv']['name'];
-        $temp2 = $_FILES['Cv']['tmp_name'];
-        $folder2 = 'Cv/' . $pic;
-        move_uploaded_file($temp2, $folder2);
+        // Handle Image upload
+        if (!empty($_FILES['Image']['name'])) {
+            $pic = $_FILES['Image']['name'];
+            $temp1 = $_FILES['Image']['tmp_name'];
+            $folder1 = 'Pic/' . $pic;
+            move_uploaded_file($temp1, $folder1);
+        } else {
+            $folder1 = $row['Picture']; // Keep the existing image
+        }
 
-        $sql = "UPDATE student SET Name='$Name', Email='$Email', Age='$Age', Gender='$Gender', Dob='$Dob', Address='$Adress', Hobby='$Hobby', Picture='$folder1', Cv='$folder2' WHERE Id='$Id'"; 
+        // Handle CV upload
+        if (!empty($_FILES['Cv']['name'])) {
+            $pic = $_FILES['Cv']['name'];
+            $temp2 = $_FILES['Cv']['tmp_name'];
+            $folder2 = 'Cv/' . $pic;
+            move_uploaded_file($temp2, $folder2);
+        } else {
+            $folder2 = $row['Cv']; // Keep the existing CV
+        }
+
+        // Update query
+        $sql = "UPDATE student 
+                SET Name='$Name', 
+                    Email='$Email', 
+                    Age='$Age', 
+                    Gender='$Gender', 
+                    Dob='$Dob', 
+                    Address='$Address', 
+                    Hobby='$Hobby', 
+                    Picture='$folder1', 
+                    Cv='$folder2' 
+                WHERE Id='$Id'";
 
         $result = mysqli_query($conn, $sql);
 
         if($result) {
             echo "<script>alert('Success')</script>";
-            echo "<script>window.href = /website/CRUD/view.php</script>";
+            echo "<script>location.href = 'view.php'</script>";
         } else {
             echo "<script>alert('Failed')</script>". mysqli_error($conn);
         }
