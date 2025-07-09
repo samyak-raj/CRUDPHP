@@ -56,10 +56,10 @@
                     <a href="<?php echo $row['Cv']?>"> View Cv</a>
                 </td>
                 <td>
-                    <button><a href="update.php">Update</a></button>
+                    <button><a href="update.php?Id=<?php echo $row['Id']?>">Update</a></button>
                 </td>
                 <td>
-                    <button><a href="delete.php">Delete</a></button>
+                    <button><a href="delete.php?Id=<?php echo $row['Id']?>">Delete</a></button>
                 </td>
             </tr>
             <?php
