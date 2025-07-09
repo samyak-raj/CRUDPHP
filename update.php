@@ -15,6 +15,12 @@ $Hobby = explode(',', $row['Hobby']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style> 
+        img {
+            height: 200px;
+            width: 200px;
+        }
+    </style>
 </head>
 <body>
     <form method="POST" enctype="multipart/form-data">
@@ -89,12 +95,17 @@ $Hobby = explode(',', $row['Hobby']);
 
        Image:
        <input type="file" name="Image" id="" accept="Image/*">
+        <br><br>
+        <img src="<?php echo $row['Picture']?>" alt="">
+
        <br><br>
 
        CV:
        <input type="file" name="Cv" id="">
        <br><br>
-       
+        <a href="<?php echo $row['Cv']?>">View CV<a>
+        <br><br>
+        
        <input type="submit" value="submit"  name="Submit">
        <br><br>
        
@@ -121,12 +132,13 @@ include 'dbconnect.php';
         $folder2 = 'Cv/' . $pic;
         move_uploaded_file($temp2, $folder2);
 
-        $sql = "INSERT INTO student(Name, Email, Gender, Dob, Address, Hobby, Age, Picture, Cv) VALUES('$Name', '$Email', '$Gender', '$Dob', '$Address', '$Hobby', '$Age', '$folder1', '$folder2')";
+        $sql = "UPDATE student SET Name='$Name', Email='$Email', Age='$Age', Gender='$Gender', Dob='$Dob', Address='$Adress', Hobby='$Hobby', Picture='$folder1', Cv='$folder2' WHERE Id='$Id'"; 
 
         $result = mysqli_query($conn, $sql);
 
         if($result) {
             echo "<script>alert('Success')</script>";
+            echo "<script>window.href = /website/CRUD/view.php</script>";
         } else {
             echo "<script>alert('Failed')</script>". mysqli_error($conn);
         }
