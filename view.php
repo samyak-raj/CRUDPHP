@@ -69,5 +69,6 @@
     ?>
 
    </table> 
+   <button onclick="location.href='form.php'">Add a student</button>
 </body>
 </html>
